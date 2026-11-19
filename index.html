@@ -1,0 +1,23 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>flow.db.com Flipbook DOM-XSS - launcher</title>
+<style>
+:root{--bg:#0b1020;--fg:#e7ecf5;--ac:#ff4d4d;--mut:#8aa0c6}
+@media(prefers-color-scheme:light){:root{--bg:#f6f8fc;--fg:#10203a;--mut:#4a5e82}}
+body{margin:0;font:16px/1.6 system-ui,sans-serif;background:var(--bg);color:var(--fg)}
+.wrap{max-width:760px;margin:0 auto;padding:40px 18px}
+h1{font-size:22px}a.btn{display:inline-block;background:var(--ac);color:#fff;text-decoration:none;font-weight:700;border-radius:8px;padding:12px 22px;margin:14px 0}
+code{background:#ffffff1a;padding:1px 5px;border-radius:4px}.mut{color:var(--mut)}
+</style></head><body><div class=wrap>
+<h1>Deutsche Bank <code>flow.db.com</code> flipbook &mdash; cross-origin postMessage DOM-XSS</h1>
+<p>This foreign-origin page frames the real DB Livebook flipbook at
+<code>flow.db.com/static/flipbook/Raised-in-London-2024/index.html?iframe=1</code>,
+waits for its <code>"init"</code> handshake, and posts a crafted <code>book.xml</code> whose
+<code>&lt;node title&gt;</code> carries <code>&lt;img src=x onerror=alert(document.domain)&gt;</code>.
+The viewer renders it unescaped via jQuery <code>.append()</code> &mdash; arbitrary JavaScript executes
+in the <code>flow.db.com</code> origin.</p>
+<p><a class=btn href="run.html" target="_blank" rel="noopener">Run live PoC &#9658;</a></p>
+<p class=mut>Expected: within ~2s an <b>alert("flow.db.com")</b> dialog fires and the log turns red
+(<code>PMXSS:flow.db.com</code>) &mdash; proving JS execution in the Deutsche Bank origin.
+Harmless <code>alert()</code>+beacon only; no data accessed, nothing hosted.</p>
+</div></body></html>
